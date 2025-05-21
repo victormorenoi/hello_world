@@ -1,9 +1,3 @@
----
-name: Feature branches to staging
-about: Template for PR from dev to staging
-title: "feat/fix: "
----
-
 ## Summary & Context
 
 <!-- What does this PR do and why is it needed? Reference any relevant ticket, request, or issue. -->
