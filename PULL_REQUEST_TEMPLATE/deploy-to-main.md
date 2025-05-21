@@ -1,9 +1,3 @@
----
-name: Deploy to Production
-about: Template for PR from staging to main
-title: "deploy: "
----
-
 # Deploy to Production
 
 > Deploy {{DEPLOY_NUMBER}} of {{DEPLOY_DATE}} from `staging` to `main`.
