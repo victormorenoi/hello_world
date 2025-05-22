@@ -17,7 +17,7 @@ jobs:
           echo "PR base branch: ${{ github.event.pull_request.base.ref }}"
           echo "PR head branch: ${{ github.event.pull_request.head.ref }}"
 
-          if [ "${{ github.event.pull_request.head.ref }}" = "main" ] && [ "${{ github.event.pull_request.base.ref }}" != "staging" ]; then
+          if [ "${{ github.event.pull_request.base.ref }}" = "main" ] && [ "${{ github.event.pull_request.head.ref }}" != "staging" ]; then
             echo "Error: PR to main must come from staging branch only."
             exit 1
           fi
