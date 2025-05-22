@@ -2,9 +2,10 @@ name: Validate PR source branch
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
     branches:
       - main
+      - staging
 
 jobs:
   check-pr-source:
@@ -16,7 +17,7 @@ jobs:
           echo "PR base branch: ${{ github.event.pull_request.base.ref }}"
           echo "PR head branch: ${{ github.event.pull_request.head.ref }}"
 
-          if [ "${{ github.event.pull_request.head.ref }}" != "staging" ]; then
+          if [ "${{ github.event.pull_request.base.ref }}" = "main" ] && [ "${{ github.event.pull_request.head.ref }}" != "staging" ]; then
             echo "Error: PR to main must come from staging branch only."
             exit 1
           fi
