@@ -1,4 +1,4 @@
-## ℹ️ PR Template Guide
+# Choose the PR template
 
 If you're creating a PR from a **feature branch to `staging`**, please:
 👉 Add to the URL:
