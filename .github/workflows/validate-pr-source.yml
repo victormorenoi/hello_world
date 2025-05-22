@@ -2,7 +2,7 @@ name: Validate PR source branch
 
 on:
   pull_request:
-    types: [opened, edited, synchronize, reopened, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
     branches:
       - main
 
@@ -15,8 +15,17 @@ jobs:
         run: |
           echo "PR base branch: ${{ github.event.pull_request.base.ref }}"
           echo "PR head branch: ${{ github.event.pull_request.head.ref }}"
-
+          
+          # Si el PR ya no está dirigido a main, terminar con éxito
+          if [ "${{ github.event.pull_request.base.ref }}" != "main" ]; then
+            echo "PR is no longer targeting main branch. Check passes."
+            exit 0
+          fi
+          
+          # Verificar que el PR venga de staging si apunta a main
           if [ "${{ github.event.pull_request.head.ref }}" != "staging" ]; then
-            echo "Error: PR to main must come from staging branch only."
+            echo "::error::ERROR: PRs to main must come from staging branch only. Please DO NOT create PRs to main from any other branch."
+            echo "::error::If you created this PR by mistake, please close it and create a new PR from staging to main."
+            echo "::error::Changing the target branch after creation will not fix this issue."
             exit 1
           fi
