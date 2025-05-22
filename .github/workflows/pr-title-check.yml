@@ -1,0 +1,40 @@
+name: Validate PR Title
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    branches:
+      - staging
+      - main
+
+jobs:
+  check-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR title format by target branch
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          TARGET_BRANCH: ${{ github.event.pull_request.base.ref }}
+        run: |
+          echo "PR title: $PR_TITLE"
+          echo "Target branch: $TARGET_BRANCH"
+
+          if [[ "$TARGET_BRANCH" == "staging" ]]; then
+            # Conventional Commits with optional scope, ! optional y BREAKING CHANGE:
+            if [[ ! "$PR_TITLE" =~ ^(BREAKING\ CHANGE:)|(feat|fix|docs|style|refactor|test|chore)(\([^\)]+\))?(!)?:\ .+ ]]; then
+              echo "❌ PR title must follow Conventional Commits format when merging to staging."
+              exit 1
+            fi
+            echo "✅ PR title follow Conventional Commits format"
+
+          elif [[ "$TARGET_BRANCH" == "main" ]]; then
+            # deploy: YYYY-MM-DD (n)
+            if [[ ! "$PR_TITLE" =~ ^deploy:\ [0-9]{4}-[0-9]{2}-[0-9]{2}\ \([0-9]+\)$ ]]; then
+              echo "❌ PR title must be 'deploy: YYYY-MM-DD (n)' when merging to main."
+              exit 1
+            fi
+            echo "✅ PR title follow Conventional Commits format"
+
+          else
+            echo "⚠️ No title validation rules for target branch '$TARGET_BRANCH'."
+          fi

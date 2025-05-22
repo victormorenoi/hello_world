@@ -1,0 +1,22 @@
+name: Validate PR source branch
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches:
+      - main
+
+jobs:
+  check-pr-source:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if PR branch is staging
+        run: |
+          echo "PR base branch: ${{ github.event.pull_request.base.ref }}"
+          echo "PR head branch: ${{ github.event.pull_request.head.ref }}"
+
+          if [ "${{ github.event.pull_request.head.ref }}" != "staging" ]; then
+            echo "Error: PR to main must come from staging branch only."
+            exit 1
+          fi
